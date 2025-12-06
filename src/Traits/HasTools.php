@@ -52,15 +52,12 @@ trait HasTools
         try {
             $timeout = config('mcp-client.timeout.list', 10);
 
-            $response = Mcp::request([
+            $result = Mcp::request([
                 'jsonrpc' => '2.0',
                 'id' => 1,
                 'method' => 'tools/list',
                 'params' => [],
             ], ['timeout' => $timeout]);
-
-
-            $result = json_decode($response, true);
 
             if (isset($result['result']['tools'])) {
                 $this->tools = $result['result']['tools'];
@@ -157,10 +154,9 @@ trait HasTools
     public function callTool(string $toolName, array $arguments = [])
     {
         try {
-            $serverUrl = config('mcp-client.server_url');
             $timeout = config('mcp-client.timeout.tools', 30);
 
-            $response = Mcp::request([
+            $result = Mcp::request([
                 'jsonrpc' => '2.0',
                 'id' => 1,
                 'method' => 'tools/call',
@@ -169,21 +165,6 @@ trait HasTools
                     'arguments' => $arguments,
                 ],
             ], ['timeout' => $timeout]);
-//            $client = new Client(['timeout' => $timeout]);
-//
-//            $response = $client->post($serverUrl, [
-//                'json' => [
-//                    'jsonrpc' => '2.0',
-//                    'id' => 1,
-//                    'method' => 'tools/call',
-//                    'params' => [
-//                        'name' => $toolName,
-//                        'arguments' => $arguments,
-//                    ],
-//                ],
-//            ]);
-
-            $result = json_decode($response->getBody(), true);
 
             if (config('mcp-client.logging.log_tool_calls')) {
                 Log::info('Called MCP tool', [

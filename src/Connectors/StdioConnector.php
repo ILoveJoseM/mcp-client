@@ -12,7 +12,7 @@ class StdioConnector implements McpServerConnectorInterface
 {
     public function request($data, $options = [])
     {
-        $jsonParams = json_decode($data);
+        $jsonParams = json_encode($data , JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
         $stdioCommand = config('mcp-client.stdio_command');
         $process = new Process($stdioCommand);
         $process->setTimeout($options['timeout'] ?? config('mcp-client.timeout'));
